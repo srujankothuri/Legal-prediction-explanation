@@ -1,0 +1,31 @@
+encoder:
+  name: "xlnet"
+  pretrained: "xlnet-base-cased"
+  hidden_size: 768
+  num_layers_concat: 4            # last N hidden layers to concatenate
+  embedding_dim: 3072              # 768 * 4
+  max_tokens: 10000                # truncate docs longer than this
+  chunk_window: 510                # tokens per chunk (before special tokens)
+  chunk_stride: 410                # overlap stride between chunks
+  max_seq_length: 512              # final padded sequence length
+
+fine_tuning:
+  learning_rate: 2.0e-6
+  epochs: 5
+  batch_size: 6
+  warmup_steps: 1000
+  max_grad_norm: 1.0
+  seed: 21
+
+classifier:
+  type: "bigru_han"
+  gru_units: 200
+  gru_layers: 3
+  attention_dim: 400
+  dropout: 0.5
+  dense_units: 64
+  mask_value: -99.0
+  batch_size: 32
+  epochs: 1
+  optimizer: "adam"
+  loss: "binary_crossentropy"

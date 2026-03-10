@@ -1,0 +1,18 @@
+# ── Git LFS Tracking ────────────────────────────────────────────────────────
+# Track large binary files that shouldn't bloat the repo
+
+# Model weights
+trained_models/**/*.safetensors filter=lfs diff=lfs merge=lfs -text
+trained_models/**/*.h5 filter=lfs diff=lfs merge=lfs -text
+trained_models/**/*.bin filter=lfs diff=lfs merge=lfs -text
+trained_models/**/*.model filter=lfs diff=lfs merge=lfs -text
+
+# Embeddings
+data/embeddings/**/*.npy filter=lfs diff=lfs merge=lfs -text
+
+# Raw datasets
+data/raw/*.csv filter=lfs diff=lfs merge=lfs -text
+
+# Vector DB
+vector_db/**/*.faiss filter=lfs diff=lfs merge=lfs -text
+vector_db/**/*.pkl filter=lfs diff=lfs merge=lfs -text

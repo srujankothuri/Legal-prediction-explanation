@@ -1,0 +1,32 @@
+data:
+  dataset_path: "data/raw/ILDC_single.csv"         # mini dataset for testing
+  full_dataset_path: "data/raw/ILDC_multi.csv"      # full 32K+ dataset
+  text_column: "text"
+  label_column: "label"
+  split_column: "split"
+  train_split: "train"
+  dev_split: "dev"
+  test_split: "test"
+
+paths:
+  trained_models_dir: "trained_models"
+  embeddings_dir: "data/embeddings"
+  logs_dir: "logs"
+  checkpoints_dir: "trained_models/checkpoints"
+
+training:
+  use_mixed_precision: false
+  gradient_accumulation_steps: 1
+  save_best_only: true
+  early_stopping_patience: 3
+  log_every_n_steps: 100
+  validate_every_n_steps: 1000
+
+evaluation:
+  batch_size: 32
+  metrics:
+    - "accuracy"
+    - "macro_f1"
+    - "micro_f1"
+    - "macro_precision"
+    - "macro_recall"

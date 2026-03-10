@@ -1,0 +1,31 @@
+encoder:
+  name: "roberta"
+  pretrained: "roberta-base"
+  hidden_size: 768
+  num_layers_concat: 4
+  embedding_dim: 3072
+  max_tokens: 10000
+  chunk_window: 510
+  chunk_stride: 410
+  max_seq_length: 512
+
+fine_tuning:
+  learning_rate: 2.0e-6
+  epochs: 5
+  batch_size: 6
+  warmup_steps: 1000
+  max_grad_norm: 1.0
+  seed: 21
+
+classifier:
+  type: "bigru_han"
+  gru_units: 200
+  gru_layers: 3
+  attention_dim: 400
+  dropout: 0.5
+  dense_units: 64
+  mask_value: -99.0
+  batch_size: 32
+  epochs: 1
+  optimizer: "adam"
+  loss: "binary_crossentropy"

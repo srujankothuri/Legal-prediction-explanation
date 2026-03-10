@@ -1,0 +1,44 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# ── Environments ────────────────────────────────────────────────────────────
+.env
+venv/
+.venv/
+env/
+
+# ── IDE ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────────────────────────────────────
+logs/*.log
+*.log
+
+# ── Jupyter ─────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Streamlit ───────────────────────────────────────────────────────────────
+.streamlit/
+
+# ── Large files (tracked via Git LFS — see .gitattributes) ─────────────────
+# These are NOT ignored — they're LFS-tracked
+# trained_models/
+# data/embeddings/
+# data/raw/
+# vector_db/

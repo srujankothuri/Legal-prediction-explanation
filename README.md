@@ -1,116 +1,79 @@
-# Automating Court Judgement Prediction and Explanation for Indian Legal Cases
+# ⚖️ Legal Judgment Prediction & Explanation
 
-A research-backed project that predicts the likely outcome of an Indian legal case (**Accepted/Rejected**) and generates supporting explanation signals from the judgement text.
+AI-powered Indian Supreme Court judgment prediction with sentence-level explainability and a RAG-based legal chatbot.
 
-This repository also includes:
-- legal case **summarization**,
-- outcome **prediction**,
-- outcome **explanation**, and
-- a retrieval-augmented **LegalSmart chatbot** for Indian legal queries.
+> **Published**: Springer ICDSA 2025 — *Court Judgment Prediction using Hierarchical Attention Networks*
 
-## Publication
+## 🚧 Status: Under Active Development
 
-This project is based on the published Springer conference paper:
+This repository is being rebuilt from the ground up with proper software engineering practices.
 
-- **Automating Court Judgement Prediction and Explanation for Indian Legal Cases**
-  https://link.springer.com/chapter/10.1007/978-3-032-12827-0_7
+## Architecture
 
-A local copy of the paper is available in this repository:
-- `Automating_Court_Judgement_Prediction_and_Explanation_for_Indian_Legal_Cases_springer.pdf`
-
-## Project Highlights
-
-- Hierarchical judgement prediction pipeline using:
-  - **XLNet** for contextual sentence/document representations,
-  - **BiGRU + Attention** for sequence-level decision modeling,
-  - final **sigmoid/softmax-style classification** for outcome label generation.
-- Reported model performance from the research work: **~74% accuracy**.
-- Streamlit-based interface for end-to-end legal document interaction.
-- RAG-enabled legal chatbot built with FAISS + LangChain + Together API.
-
-## Repository Structure
-
-```text
-.
-├── app.py                              # Streamlit app entrypoint
-├── Comb_FINAL.py                       # Core utility functions (PDF parsing, embedding pipeline, explanation utilities)
-├── README.md
-├── Automating_Court_Judgement_...pdf   # Springer paper (local copy)
-├── Prediction_full_xlnet/
-│   └── XGA_concat_epoch1_3.h5          # Trained prediction model weights
-├── L1_Output/
-│   └── embeds.npy                      # Intermediate embeddings
-├── law_vector_db/
-│   ├── index.faiss
-│   └── index.pkl                       # Chatbot retrieval index
-└── chatbot_legal.jpeg                  # Chatbot banner image
+```
+PDF Upload → Text Extraction
+           → Transformer Embeddings (Level 1)
+           → BiGRU + Hierarchical Attention Prediction (Level 2)
+           → Occlusion-based Explanation (Level 3)
+           → InLegalBERT Summary
+           → Streamlit UI + Legal Chatbot (RAG)
 ```
 
-## Core Components
+## Models
 
-### 1) Summarization
-- Extracts text from uploaded case PDFs.
-- Generates case summaries using **InLegalBERT** (`law-ai/InLegalBERT`).
+| Encoder | Classifier | Status |
+|---------|-----------|--------|
+| XLNet-base | 3x BiGRU + HAN Attention | 🔜 Pending |
+| RoBERTa-base | 3x BiGRU + HAN Attention | 🔜 Pending |
+| BERT-base | 3x BiGRU + HAN Attention | 🔜 Pending |
+| DistilBERT | 3x BiGRU + HAN Attention | 🔜 Pending |
 
-### 2) Prediction
-- Generates XLNet embeddings.
-- Uses hierarchical BiGRU + attention network with stored weights (`.h5`) to predict case outcome.
+## Project Structure
 
-### 3) Explanation
-- Uses chunk/sentence-level contribution behavior to produce explanation signals supporting the prediction.
+```
+├── configs/                    # YAML configuration files
+│   ├── models/                 # Per-model hyperparameters
+│   ├── training.yaml           # Training pipeline config
+│   └── app.yaml                # Streamlit app config
+├── src/
+│   ├── data/                   # Dataset loading, preprocessing
+│   ├── models/                 # Encoder + classifier architectures
+│   ├── training/               # Training loops, embedding generation
+│   ├── inference/              # Prediction, explanation, summarization
+│   ├── evaluation/             # Metrics and model comparison
+│   ├── chatbot/                # RAG pipeline for legal Q&A
+│   └── utils/                  # Logging, config, device management
+├── scripts/                    # CLI scripts for training & evaluation
+├── app/                        # Streamlit application
+├── trained_models/             # Saved model weights (Git LFS)
+├── data/                       # Datasets and embeddings (Git LFS)
+└── tests/                      # Unit tests
+```
 
-### 4) LegalSmart Chatbot
-- Uses a FAISS vector database (`law_vector_db/`) and HuggingFace embeddings.
-- Runs a conversational retrieval chain with a legal-domain prompt template.
+## Quick Start
 
-## Quick Start (Developer Setup)
-
-> The current codebase has research-prototype style dependencies; create an isolated environment before running.
-
-### 1. Clone and enter the repository
 ```bash
-git clone <your-repo-url>
+# Clone
+git clone https://github.com/srujankothuri/Legal-prediction-explanation.git
 cd Legal-prediction-explanation
-```
 
-### 2. Create a virtual environment
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Linux/Mac
-# .venv\Scripts\activate    # Windows PowerShell
-```
-
-### 3. Install dependencies
-Install the project dependencies used by the Streamlit app, Transformers, TensorFlow/Keras, PyTorch, NLTK, and LangChain ecosystem packages.
-
-If you maintain a `requirements.txt`, install with:
-```bash
+# Install
 pip install -r requirements.txt
+
+# Configure
+cp .env.example .env
+# Edit .env with your API keys
+
+# Run (after models are trained)
+streamlit run app/streamlit_app.py
 ```
 
-Otherwise, install the imports required by `app.py` and `Comb_FINAL.py` manually.
+## Dataset
 
-### 4. Run the app
-```bash
-streamlit run app.py
-```
+[ILDC — Indian Legal Documents Corpus](https://github.com/Exploration-Lab/ILDC)
+- 34,816 Indian Supreme Court cases
+- Binary classification: accepted / rejected
 
-## Usage Flow
+## License
 
-1. Open the Streamlit app.
-2. Upload a legal case PDF in the **Summarization** tab.
-3. Review generated summary.
-4. Switch to **Prediction** to get the predicted judgement outcome.
-5. Switch to **Explanation** for rationale-oriented explanation outputs.
-6. Use **LegalSmart Chatbot** for legal Q&A grounded in the vector database.
-
-## Notes and Limitations
-
-- This repository is primarily a **research implementation** and may require environment tuning (CUDA, model versions, tokenizer/model artifacts).
-- Some model artifacts are expected locally (e.g., XLNet directory and weight files).
-- Chatbot functionality depends on a valid Together API key and available vector store files.
-- Outputs are intended for research/assistance, not legal advice.
-
-## Citation
-
-If this project helps your work, please cite the Springer publication listed above.
+MIT

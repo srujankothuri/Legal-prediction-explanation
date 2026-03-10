@@ -1,0 +1,37 @@
+app:
+  title: "Legal Judgment Prediction & Explanation"
+  icon: "⚖️"
+  layout: "wide"
+
+models:
+  available:
+    - name: "XLNet + BiGRU-HAN"
+      encoder_dir: "trained_models/xlnet_finetuned"
+      classifier_path: "trained_models/han_xlnet.h5"
+      config: "configs/models/xlnet_bigru.yaml"
+    - name: "RoBERTa + BiGRU-HAN"
+      encoder_dir: "trained_models/roberta_finetuned"
+      classifier_path: "trained_models/han_roberta.h5"
+      config: "configs/models/roberta_bigru.yaml"
+    - name: "BERT + BiGRU-HAN"
+      encoder_dir: "trained_models/bert_finetuned"
+      classifier_path: "trained_models/han_bert.h5"
+      config: "configs/models/bert_bigru.yaml"
+    - name: "DistilBERT + BiGRU-HAN"
+      encoder_dir: "trained_models/distilbert_finetuned"
+      classifier_path: "trained_models/han_distilbert.h5"
+      config: "configs/models/distilbert_bigru.yaml"
+  default: "XLNet + BiGRU-HAN"
+
+summarizer:
+  model_name: "law-ai/InLegalBERT"
+  summary_percentage: 0.08
+
+chatbot:
+  vector_db_path: "vector_db"
+  embedding_model: "nomic-ai/nomic-embed-text-v1"
+  llm_model: "mistralai/Mistral-7B-Instruct-v0.2"
+  llm_temperature: 0.5
+  llm_max_tokens: 1024
+  retriever_k: 4
+  memory_window: 2
