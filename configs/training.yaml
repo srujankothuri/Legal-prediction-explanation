@@ -1,5 +1,5 @@
 data:
-  dataset_path: "data/raw/single_ILDC.csv"         
+  dataset_path: "data/raw/single_ildc.csv"         
   text_column: "text"
   label_column: "label"
   split_column: "split"

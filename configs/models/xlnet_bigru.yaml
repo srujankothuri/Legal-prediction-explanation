@@ -11,8 +11,8 @@ encoder:
 
 fine_tuning:
   learning_rate: 2.0e-6
-  epochs: 5
-  batch_size: 6
+  epochs: 3
+  batch_size: 16
   warmup_steps: 1000
   max_grad_norm: 1.0
   seed: 21

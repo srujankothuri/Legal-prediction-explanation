@@ -19,8 +19,10 @@ from typing import Dict, Any, Optional
 
 import torch
 import torch.nn as nn
+from torch.amp import autocast, GradScaler
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
-from transformers import AdamW, get_linear_schedule_with_warmup
+from torch.optim import AdamW
+from transformers import get_linear_schedule_with_warmup
 
 from src.models.encoders import load_encoder, save_encoder
 from src.data.preprocessing import DocumentPreprocessor
@@ -111,7 +113,7 @@ class EncoderTrainer:
         optimizer = AdamW(
             self.model.parameters(),
             lr=self.ft_cfg["learning_rate"],
-            correct_bias=True,
+            
         )
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
@@ -152,11 +154,14 @@ class EncoderTrainer:
         logger.info("Training complete!")
 
     def _train_epoch(self, train_loader, optimizer, scheduler, val_loader, epoch):
-        """Run one training epoch."""
+        """Run one training epoch with fp16 mixed precision."""
         self.model.train()
         total_loss = 0
         log_interval = self.ft_cfg.get("log_every_n_steps", 100)
         val_interval = self.ft_cfg.get("validate_every_n_steps", 1000)
+
+        # Mixed precision scaler
+        scaler = GradScaler("cuda")
 
         for step, batch in enumerate(train_loader):
             # Log progress
@@ -174,23 +179,26 @@ class EncoderTrainer:
 
             self.model.zero_grad()
 
-            outputs = self.model(
-                b_input_ids,
-                token_type_ids=None,
-                attention_mask=b_input_mask,
-                labels=b_labels,
-            )
+            with autocast("cuda"):
+                outputs = self.model(
+                    b_input_ids,
+                    token_type_ids=None,
+                    attention_mask=b_input_mask,
+                    labels=b_labels,
+                )
+                loss = outputs[0]
 
-            loss = outputs[0]
             total_loss += loss.item()
 
-            # Backward pass
-            loss.backward()
+            # Backward pass with scaler
+            scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(
                 self.model.parameters(),
                 self.ft_cfg["max_grad_norm"],
             )
-            optimizer.step()
+            scaler.step(optimizer)
+            scaler.update()
             scheduler.step()
 
             # Periodic validation
