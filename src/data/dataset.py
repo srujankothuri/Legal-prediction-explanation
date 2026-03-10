@@ -7,7 +7,7 @@ and providing clean interfaces for the training pipeline.
 Usage:
     from src.data.dataset import ILDCDataset
 
-    dataset = ILDCDataset("data/raw/single_ILDC.csv")
+    dataset = ILDCDataset("data/raw/single_ildc.csv")
     train_df = dataset.get_split("train")
     print(dataset.summary())
 """
