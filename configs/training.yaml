@@ -1,6 +1,5 @@
 data:
-  dataset_path: "data/raw/ILDC_single.csv"         # mini dataset for testing
-  full_dataset_path: "data/raw/ILDC_multi.csv"      # full 32K+ dataset
+  dataset_path: "data/raw/single_ILDC.csv"         
   text_column: "text"
   label_column: "label"
   split_column: "split"
